@@ -11,7 +11,6 @@ addpath('~/matlab/mritools_Linux_3.3.5/matlab/NIfTI_20140122');
 run('~/matlab/MEDI_toolbox/MEDI_set_path.m');
 
 
-%modified to run on matlab 2015
 [iField,voxel_size,matrix_size,CF,delta_TE,TE,B0_dir]=Read_DICOM(DICOM_folder);
 
 % Estimate the frequency offset in each of the voxel using a complex
