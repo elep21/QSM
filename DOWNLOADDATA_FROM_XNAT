@@ -1,0 +1,64 @@
+##############################
+###Donwload data from XNAT###
+###Eleonora Patitucci########
+###15/03/2023###############
+############################
+
+
+####useful document: https://xnat.readthedocs.io/_/downloads/en/0.3.26/pdf/
+
+
+#PYTHON 
+import pandas as pd 
+import xnat
+
+
+	#change with your USERNAME and PASSWORD
+session = xnat.connect('https://xnat.cubric.cf.ac.uk/', user='YOUR USERNAME', password='YOUR PWD')
+
+
+#session.projects
+	#change project name 
+wand_project = session.projects["314_WAND"]
+
+        #e.g. 'SUBJECTS_7echoRR_Mscan_Pscan_missingdcm.csv' file line1 - to automatic read CUBRIC ID, session name, acquisition to be downloaded:
+	#V1,V2,V3,V4
+	#314_62452,19_09_06-13_44_29-DST-1_3_12_2_1107_5_2_34_18984,Aspire_M_gre_fatnav_0.67iso_7echo_GRAPPA2x2_DGoption_192,Aspire_P_gre_fatnav_0.67iso_7echo_GRAPPA2x2_DGoption_192
+all_file = pd.read_csv('/cubric/newscratch/471_metabolism/QSM/WAND/ANALYSIS/SUBJECTS_7echoRR_Mscan_Pscan_missingdcm.csv')
+
+v1 = all_file.V1.to_list()
+v2 = all_file.V2.to_list()
+v3 = all_file.V3.to_list()
+v4 = all_file.V4.to_list()
+
+       #change with the name of the scan to be downloaded
+for subj_id, session, scanM, scanP in zip(v1, v2, v3, v4):
+	#CUBRIC ID
+	experiment = wand_project.subjects[subj_id].experiments[session]
+	print(f"Subject {subj_id} successfully loaded")
+	#ACQUISITION NAME
+	experiment.scans['{}'.format(scanM)].download('/cubric/newscratch/471_metabolism/QSM/WAND/DATA/{}/Aspire_M.zip'.format(subj_id))
+	experiment.scans['{}'.format(scanP)].download('/cubric/newscratch/471_metabolism/QSM/WAND/DATA/{}/Aspire_P.zip'.format(subj_id))
+	print(f"Subject {v1} successfully downloaded")
+
+
+
+###when download is over, CLOSE PYTHON and loop to unzip files (in terminal)
+
+#list of subjects 
+
+subjects='/cubric/newscratch/471_metabolism/QSM/WAND/ANALYSIS/SUBJECTS_missingdcm'
+
+for ID in $(cat ${subjects});
+	do ID_DIR=/cubric/newscratch/471_metabolism/QSM/WAND/DATA/${ID};
+	for scan in M P;	
+		do mkdir ${ID_DIR}/${scan};
+		chmod 777 ${ID_DIR}/Aspire_${scan}.zip;
+		mv ${ID_DIR}/Aspire_${scan}.zip ${ID_DIR}/${scan}/;
+		cd ${ID_DIR}/${scan}/;
+		unzip ${ID_DIR}/${scan}/Aspire_${scan}.zip >> /cubric/newscratch/471_metabolism/QSM/WAND/ANALYSIS/OUT;
+		echo ${ID} ${scan} 'DONE'>> /cubric/newscratch/471_metabolism/QSM/WAND/ANALYSIS/OUT_DONE;
+	done	
+done 
+
+
