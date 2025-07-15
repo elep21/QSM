@@ -45,10 +45,6 @@ TE = str2num(fgetl(fileID));
 tline = fgetl(fileID);
 B0_dir = str2num(fgetl(fileID));
 
-% !!! to extract from DICOM_par
-TE=[0.003   0.0115  0.019  0.0285];
-B0_dir=[0.0000   0.0000   1.0000 ];
-
 
 fclose(fileID);
 
