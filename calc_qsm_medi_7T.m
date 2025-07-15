@@ -1,4 +1,4 @@
-function calc_qsm_ndi_7T(output_dir)
+function calc_qsm_medi_7T(output_dir)
 
 %Michael Germuska 
 %Eleonora Patitucci
