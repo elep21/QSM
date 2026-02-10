@@ -10,7 +10,7 @@ run('~/matlab/MEDI_toolbox/MEDI_set_path.m');
 
 
 %modified to run on matlab 2015
-[iField,voxel_size,matrix_size,CF,delta_TE,TE,B0_dir]=Read_Siemens_DICOM_Louisa(DICOM_folder);
+[iField,voxel_size,matrix_size,CF,delta_TE,TE,B0_dir]=Read_Siemens_DICOM_XA30(DICOM_folder);
 
 % Estimate the frequency offset in each of the voxel using a complex
 % fitting (even echo spacing)
